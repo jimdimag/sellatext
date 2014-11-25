@@ -12,9 +12,9 @@ public $fname;
 public $lname;
    
 public static function authenticate($email="", $password="") {
-       //global $database;
-       $email = $this->database->escape_value($email);
-       $password = $this->database->escape_value($password);
+       global $database;
+       $email = $database->escape_value($email);
+       $password = $database->escape_value($password);
        
        $sql  = "SELECT * FROM ".self::$table_name;
     $sql .= " WHERE email = '{$email}' ";
