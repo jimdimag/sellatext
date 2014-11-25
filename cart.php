@@ -9,7 +9,7 @@ require_once 'header.php';
 
 
 //if (isset($_SESSION['buyback_cartId'])){
- $cart_id = $_SESSION['buyback_cartId']; echo $cart_id;
+ $cart_id = $_SESSION['buyback_cartId']; 
 //} else {
 	//$cart_id=0;echo "<br>cart id got set as: ".$_SESSION['buyback_cartId']; 
 //}

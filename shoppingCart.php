@@ -134,7 +134,7 @@ if($results && $results->update_user()) {
                                     </li>
                                     <li>
                                         <label for="last_name">Last Name</label>
-                                        <input type="text" name="lastName" value="<?php echo $lname; ?>">
+                                        <?php echo $lname; ?>
                                     </li>
                                     <li>
                                         <label for="address1">Address, line 1</label>
