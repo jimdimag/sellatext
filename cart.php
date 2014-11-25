@@ -6,16 +6,16 @@ $total=0;
 
 require_once 'header.php';
 
-echo "user id is: " .$_SESSION['user_id'];
+
 
 //if (isset($_SESSION['buyback_cartId'])){
- $cart_id = $_SESSION['buyback_cartId']; echo "<br>cart id is set as: ".$cart_id; 
+ $cart_id = $_SESSION['buyback_cartId']; echo $cart_id;
 //} else {
 	//$cart_id=0;echo "<br>cart id got set as: ".$_SESSION['buyback_cartId']; 
 //}
 if(isset($_SESSION['user_id']) && $cart_id==0){ 
 	$results = Cart::get_users_cart($_SESSION['user_id']);
-	$cart_id = $results->cart_id; echo $cart_id;
+	$cart_id = $results->cart_id; 
 }
 if(isset($_POST['command'])){
     if($_POST['command'] == 'addItemToCart'){

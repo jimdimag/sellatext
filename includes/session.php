@@ -5,6 +5,7 @@ class Session {
     private $logged_in=FALSE;
     public $user_id;
     public $message;
+	public $cart_id;
     
     function __construct() {
         session_start();
@@ -29,6 +30,7 @@ class Session {
         unset($_SESSION['user_id']);
         unset($this->user_id);
 		unset($_SESSION['buyback_cartId']);
+		unset($this->cart_id);
 		session_destroy();
         $this->logged_in = FALSE;
     }

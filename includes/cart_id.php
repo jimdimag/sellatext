@@ -4,7 +4,7 @@ require_once(LIB_PATH.DS.'database.php');
 class Cart extends DatabaseObject {
     
     protected static $table_name = "sellatext_cart";
-    protected static $db_fields = array('id','cart_id', 'user_id', 'isbn', 'price', 'qty','title','image','binding','pages','author');
+    protected static $db_fields = array('id','cart_id', 'user_id', 'isbn', 'price', 'qty','title','image','binding','pages','author','weight');
     public $id;
     public $cart_id;
     public $user_id;
@@ -16,12 +16,13 @@ class Cart extends DatabaseObject {
 	public $binding;
 	public $pages;
 	public $author;
+	public $weight;
     
     
     public function get_new_cart_id() { 
 	global $database;
-	$sql = "SELECT MAX(id) FROM " .static::$table_name;
-    $result_set = $database->query($sql);
+	$sql = "SELECT MAX(cart_id) as cart_id FROM " .static::$table_name;
+    $result_set = $database->query($sql); 
 	if($result_set) {
     $row = $database->fetch_array($result_set);
 		$cart_id = $row['cart_id']+1; 
@@ -53,6 +54,7 @@ class Cart extends DatabaseObject {
 			$cart->image = $amazon['ImageURL'];
 			$cart->pages = $amazon['pages'];
 			$cart->author = $amazon['author'];
+			$cart->weight = $amazon['weight'];
 			/*if(isset($cart->id)) { 
         		static::create($cart);
     		}*/

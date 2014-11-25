@@ -5,11 +5,8 @@ if($session->is_logged_in()) {
   if($_SESSION['buyback_cartId'] > 0){
                 redirect_to('cart.php');
                 exit;
-            } else {
-                redirect_to('index.php');
-                exit;
-            }
-}
+  }
+	}
 require_once 'header.php';
 
 
@@ -24,16 +21,16 @@ if (isset($_POST['submit'])) { // Form has been submitted.
 	
   if ($found_user) {
   	
-    $session->login($found_user);
+    $session->login($found_user);//var_dump($found_user); die;
 		log_action('Login', "{$found_user->email } logged in.");
 		$_SESSION['user_id'] = $found_user->id; 
 		$_SESSION['first_name'] = $found_user->fname; 
 		$_SESSION['last_name'] = $found_user->lname; 
 		
     if(($_SESSION['buyback_cartId']) && ($_SESSION['user_id'])){
-    	$results = Cart::update_userId($cart_id,$user_id);
+    	$results = Cart::update_userId($_SESSION['buyback_cartId'],$_SESSION['user_id']);
 		if($results && $results->update_user()) {
-			redirect_to('cart.php');
+			redirect_to('shoppingCart.php');
 		                exit;
 		}
                 

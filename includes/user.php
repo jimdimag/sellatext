@@ -16,11 +16,11 @@ public static function authenticate($email="", $password="") {
        $email = $database->escape_value($email);
        $password = $database->escape_value($password);
        
-       $sql  = "SELECT * FROM ".self::$table_name;
+       $sql  = "SELECT * FROM ".static::$table_name;
     $sql .= " WHERE email = '{$email}' ";
     $sql .= "AND password = '{$password}' ";
     $sql .= "LIMIT 1";
-	
+	echo $sql."<br>";
        /*$result_set = $database->query($sql);
       $row = $database->fetch_array($result_set);
 	  $hash = $row['password'];
@@ -30,7 +30,7 @@ public static function authenticate($email="", $password="") {
         $message = "Could not Authenticate.";
 		return $message;
     }*/
-    $result_array = self::find_by_sql($sql);var_dump($result_array);die;
+    $result_array = static::find_by_sql($sql);var_dump($result_array);die;
 	//$hash = $result_array['password']; echo "hash is: ".$hash;
 		return !empty($result_array) ? array_shift($result_array) : false;
    }

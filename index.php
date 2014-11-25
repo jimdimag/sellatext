@@ -27,6 +27,7 @@ $buyback_userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;*/
  ?>
 <div class="container">
 <div class="row">
+	<h2><?php echo output_message($message); ?></h2>
 	<?php
 require_once ('search.php');
 ?>

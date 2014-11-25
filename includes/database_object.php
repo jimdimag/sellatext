@@ -40,11 +40,6 @@ public static function count_all() {
 private static function instantiate($record) {
     $class_name = get_called_class();
     $object = new $class_name;
-    /*$object->id         = $record['id'];
-$object->username   = $record['username'];
-$object->password   = $record['password'];
-$object->first_name = $record['first_name'];
-$object->last_name  = $record['last_name']; */
     
     foreach ($record as $attribute => $value) {
         if($object->has_attribute($attribute)) {
