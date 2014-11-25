@@ -57,7 +57,7 @@
       <?php if(!isset($_SESSION['user_id'])) {?>
       <p><h1>Welcome to SellAText.net!!</h1></p>
     <?php } else {
-    	echo "<p><h1>Welcome back to SellAText.net!!</h1></p>";
+    	echo "<p><h1>Welcome back to SellAText.net ".$_SESSION['first_name']."!!</h1></p>";
     }?>
          
      </div>

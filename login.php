@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) { // Form has been submitted.
 }
 
 ?>
-
+<div class="container">
 		<h2>Login</h2>
 		<?php echo output_message($message); ?>
 			<ul>
@@ -77,5 +77,5 @@ if (isset($_POST['submit'])) { // Form has been submitted.
 		    </tr>
 		  </table>
 		</form>
-
+<br>
 <?php require_once 'footer.php'; ?>
