@@ -60,13 +60,14 @@ $cart = Cart::get_cart_contents($cart_id);
 $settings = Settings::get_site_settings();
 
 ?>
+<div class="container" id="page">
 <h2><?php echo output_message($message); ?></h2>
 <br/>
 <h1>Your Cart</h1>
 
 <?php $max = count($cart);
 if (!empty($cart)): ?>
-    <div id="page">
+    
 	<?php
 require_once 'search.php'; 
 ?>
@@ -166,7 +167,7 @@ require_once 'search.php';
                     </table>
    </div>
 <?php endif; ?>
-
+<BR><BR>
 
 <?
 include 'footer.php';
