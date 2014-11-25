@@ -4,7 +4,7 @@ require_once(LIB_PATH.DS.'database.php');
 class DatabaseObject extends MySQLDatabase {
    
    protected static $table_name = "sellatext_users"; 
-   protected static $db_fields = array('id', 'email', 'password', 'first_name', 'last_name');
+   protected static $db_fields = array('id', 'email', 'password', 'fname', 'lname');
     
     // Common Database Methods
 public static function find_all($id=0) {

@@ -21,7 +21,7 @@ if (isset($_POST['submit'])) { // Form has been submitted.
 	
   if ($found_user) {
   	
-    $session->login($found_user);//var_dump($found_user); die;
+    $session->login($found_user);
 		log_action('Login', "{$found_user->email } logged in.");
 		$_SESSION['user_id'] = $found_user->id; 
 		$_SESSION['first_name'] = $found_user->fname; 
