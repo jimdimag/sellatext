@@ -2,3 +2,47 @@ footer {
   font-size: 1em;
   text-align: center;
 }
+
+div.img
+  {
+  margin:5px;
+  padding: 5px;
+  border:1px solid #0000ff;
+  height:auto;
+  width:auto;
+  float:left;
+  text-align:center;
+  }
+div.img img
+  {
+  display:inline;
+  margin:2px;
+  border:1px solid #ffffff;
+  }
+
+div.desc
+  {
+  text-align:center;
+  font-weight:normal;
+  width:225px;
+  margin:5px;
+  }
+  div.desc2
+  {
+  text-align:center;
+  font-weight:normal;
+  width:250px;
+  margin:5px;
+  }
+#cond {
+      margin-left: 150px;
+}
+#cond2 {
+      margin-left: 150px;
+      /*margin-top: 400px;*/
+}
+.warnings {
+                text-align: center;
+                font-size: 25px;
+                margin-top: -40px;
+}

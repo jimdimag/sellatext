@@ -4,13 +4,19 @@ require_once(LIB_PATH.DS.'database.php');
 
 class User extends DatabaseObject{
  
-protected static $table_name = "sellatext_users";  
+protected static $table_name = "sellatext_users"; 
+//protected static $db_fields = array('id' 'email', 'password','fname','lname','addr_1','addr_2','city','state','zip','phone'); 
 public $id;  
 public $email;
 public $password;
 public $fname;
 public $lname;
-   
+/*public $addr_1;
+  public $addr_2;
+  public $city;
+  public $state;
+  public $zip;
+  public $phone */
 public static function authenticate($email="", $password="") {
        global $database;
        $email = $database->escape_value($email);

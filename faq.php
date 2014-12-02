@@ -5,7 +5,7 @@ include 'header.php';
 ?>
 
 <script type="text/javascript" src="https://bookcellaronline.com/booksupply/site-clean/js/faq.js"></script>
-<div id="page">
+<div id="page" class="container">
     <div id="move">
 <h3>FAQ</h3><br><br>
 <div id="titles">
@@ -25,7 +25,7 @@ If you don&rsquo;t already have an account with us, you&rsquo;ll be asked to cre
 	We&rsquo;ll provide you with a pre-paid mailing label to ship your books. Print and attach the mailing label to the outside of your shipping box, and be sure to pack your books securely. For more help with packing and shipping, see our Shipping section below. <br>
 	
 	Once we receive and process your books, we will pay you. Please see our Getting Paid section if you have any questions about getting paid.<br>
-	Please note there is a 5 quantity per title limit per customer. If you wish to sell more than 5 copies of a title, you must contact us at <a href="mailto:support@sellatext.net?Subject=Support" target="_top">Customer Service</a>. Quantities greater than 5 per title sent from the same person on multiple orders will not be returned</dd>
+	Please note there is a 1 quantity per title limit per customer. If you wish to sell more than 1 copy of a title, you must contact us at <a href="mailto:support@sellatext.net?Subject=Support" target="_top">Customer Service</a>. Quantities greater than 1 per title sent from the same person on multiple orders will not be returned</dd>
 	</dl> 
 	<h2>ISBN</h2>	
     <dl class="faqs">
