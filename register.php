@@ -33,35 +33,52 @@ if(isset($_POST['email'])){
 
 
 ?>
-<div id="page"> 
+<div id="page" class="container"> 
 	<h2><?php echo output_message($message); ?></h2>
             <h1>Register</h1>
-            <form method="POST" action="" id ="user-register-form">
+            <form method="POST" action="" id ="user-register-form" role="form">
                 <fieldset>
-                    <ol>
-                        <li>
-                            <label for="firstName">First Name</label>
+                    <div class="form-group">   
+                            <label for="firstName"class="col-sm-2 control-label">First Name</label>
+                            <div class="col-sm-10">
                             <input type="text" name="firstName" id="firstName" required="required">
-                        </li>
-                        <li>
-                            <label for="lastName">Last Name</label>
+                            </div>
+                    </div>
+                        
+                	<div class="form-group">   
+                            <label for="lastName"class="col-sm-2 control-label">Last Name</label>
+                            <div class="col-sm-10">
                             <input type="text" name="lastName" id="lastName" required="required">
-                        </li>
-                        <li>
-                            <label for="email">Email</label>
-                            <input type="text" name="email" id="email" required="required">
-                        </li>
-                        <li>
-                            <label for="password1">Password</label>
-                            <input type="password" name="password1" id="password1" required="required">
-                        </li>
-                        <li>
-                            <label for="password2">Repeat Password</label>
+                            </div>
+                    </div>
+                        
+                    <div class="form-group">   
+                            <label for="email"class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                            <input type="email" name="email" id="email" required="required">
+                            </div>
+                    </div>
+                        
+                    <div class="form-group">   
+                        <label for="password" class="col-sm-2 control-label">Password:</label>
+    					<div class="col-sm-10">
+                        <input type="password" name="password1" id="password1" required="required">
+                        </div>
+                    </div>
+                        
+                    <div class="form-group">   
+                            <label for="password2"class="col-sm-2 control-label">Repeat Password</label>
+                            <div class="col-sm-10">
                             <input type="password" name="password2" id="password2" required="required">
-                        </li>
-                    </ol>
+                            </div>
+                    </div>
+                        
                 </fieldset>
-                <input class="green" type="submit" name="submit" value="Register">
+                <div class="form-group"> 
+			    	<div class="col-sm-10">     
+					<input type="submit" name="submit" value="Register"class="btn btn-primary btn-default" role="button">
+			     	</div> 
+ 				</div>
             </form>
 </div>
 

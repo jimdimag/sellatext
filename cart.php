@@ -21,7 +21,7 @@ if(isset($_POST['command'])){
     if($_POST['command'] == 'addItemToCart'){
         $results = Cart::add_to_cart($cart_id,trim($_POST['isbn']));
 		if($results && $results->create()) {
-			$session->message("Item Added!");
+			$message="Item Added!";
 			$_SESSION['buyback_cartId']=$results->cart_id;
 			$cart_id = $_SESSION['buyback_cartId']; 
 			
@@ -74,7 +74,7 @@ require_once 'search.php';
                     <form action="" method="POST">
                         <input type="hidden" name="command" value="updateCart">
                         <h1 class="entry-title">Result</h1>
-                        <table width="650" cellpadding="2" cellspacing="2" id="book-search">
+                        <table width="650" cellpadding="2" cellspacing="2" id="book-search" class="table">
 			    <tr style="color:#FFF;">
                 <th height="30" bgcolor="#666666">&nbsp;</th>
                 <th bgcolor="#666666">Product</th>
@@ -128,20 +128,20 @@ require_once 'search.php';
                             <!--<input type="submit" id ="updateCart" value="Update Cart"> -->  
                             <form action="" method="post">
                                 <input type="hidden" name="command" value="emptyCart">
-                                <input type="submit" value="Empty Cart">
-                                <!--<button id="emptyCart" class="button">Empty Cart</button>-->
-                            </form>
-<?php if(isset($cart[$i]->user_id)) {$_SESSION['user_id'] = $cart[$i]->user_id;}
-if(isset($cart_id)) {$_SESSION['buyback_cartId'] = $cart_id;}
-?>
-                            <?php if ($total > $settings->min_amount): ?>
-                                <a href="shoppingCart.php" class="checkout">Proceed to Checkout</a>
+                                <input type="submit" value="Empty Cart" class="btn btn-primary btn-default" role="button">
+                                <?php if ($total > $settings->min_amount): ?>
+                                <a href="shoppingCart.php" class="btn btn-success btn-default active" role="button">Proceed to Checkout</a>
                             <?php else: ?>
                                 <p><input type="button" value="Proceed to Checkout" disabled="disabled">
                                     <br><span class="warning">You must sell a minimum of 
                                     $<?php echo $settings->min_amount; ?> before you can 
                                     checkout.</span></p>
                             <?php endif; ?>
+                            </form>
+<?php if(isset($cart[$i]->user_id)) {$_SESSION['user_id'] = $cart[$i]->user_id;}
+if(isset($cart_id)) {$_SESSION['buyback_cartId'] = $cart_id;}
+?>
+                            
                     </div>                
     </div>
 
@@ -152,7 +152,7 @@ if(isset($cart_id)) {$_SESSION['buyback_cartId'] = $cart_id;}
 require_once 'search.php';
 ?>   
                     <!--<h1 class="entry-title">Cart</h1>-->
-                    <table width="644" cellspacing="2" cellpadding="2">
+                    <table width="644" cellspacing="2" cellpadding="2" class="table">
                         <tbody><tr style="background-color:#3399CC; color:#FFFFFF; font-weight:bold;">
                         <td>&nbsp;</td>
                         <td>Book</td>

@@ -1,6 +1,6 @@
 $(document).ready(function(){
-	
-$("#isbn").keydown(function(e) {
+
+/*$("#isbn").keydown(function(e) {
 	 
 		//retrieve price to pay (and other data)
     	if (e.keyCode == 9 || e.keyCode == 13) {
@@ -29,5 +29,9 @@ $("#emptyCart").click(function() {
 				}// success
 			});// ajax
 });//empty cart
-
+$("#check").click(function() {
+	$("#data-paid").collapse({
+	  toggle: true
+	});
+});*/
 });//ready function

@@ -3,6 +3,7 @@ node_modules
 .tmp
 .sass-cache
 images/*
+RocketShipIt/*
 includes/amazon.php
 includes/amazonPricingMWS.php
 includes/getMatchingProduct.php

@@ -24,19 +24,19 @@ if(isset($_POST['email'])){
         if($results){                       
             $to = $_POST['email'];
             $subject = 'Your new SellAText.net password';
-            $message = 'Your new temporary password: '.$genPassword;
-            if(mail($to, $subject, $message)){
-                $session->message("Check your mail. Password sent!");
+            $message1 = 'Your new temporary password: '.$genPassword;
+            if(mail($to, $subject, $message1)){
+                $message="Check your mail. Password sent!";
                 header('Location: '.$buybackPageNames['forgotPassword']);
                 exit();
             } else {
-                $session->message("An error occurred, and your email was not sent.");
+                $message="An error occurred, and your email was not sent.";
             }
         } else {
-            $session->message("An error occurred, and your Password was not reset.");
+            $message="An error occurred, and your Password was not reset.";
         }
     } else {
-        $session->message("An error occurred, we could not find your email address.  Are you sure that you  have registered?");
+       $message="An error occurred, we could not find your email address.  Are you sure that you  have registered?";
     }
     
 }
@@ -44,21 +44,25 @@ if(isset($_POST['email'])){
 
 ?>
 <h2><?php echo output_message($message); ?></h2>
-<div id="page"> 
-            <form  id="user-forgot-pass" method="POST" action="">                                
+<div id="page" class="container"> 
+            <form  id="user-forgot-pass" method="POST" action="" role="form">                                
                 <h1>Reset Password</h1>
                 <strong>Did you forget your password?</strong>
                 <p><strong> Not to worry.</strong></p>
                 <br><p>Enter in the email address you used to register with, and we&#39;ll send you a new temporary password.</p>
                 <fieldset>
-                    <ol>
-                        <li>
-                            <label for="email">Email Address</label>
-                            <input type="text" name="email" id="email" required="required">
-                        </li>
-                    </ol>
+                    <div class="form-group"> 
+                            <label for="email"class="col-sm-2 control-label">Email Address</label>
+                            <div class="col-sm-10">  
+                            <input type="email" name="email" id="email" required="required">
+                        </div>
+                    </div>
                 </fieldset>
-                <input type="submit" name="submit" value="Reset Password">
+                <div class="form-group"> 
+			    	<div class="col-sm-10">     
+					<input type="submit" name="submit" value="Reset Password" class="btn btn-primary btn-default" role="button">
+			     	</div> 
+ 				</div>
             </form>
 </div>
 

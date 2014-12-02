@@ -5,7 +5,7 @@ require_once('includes/initialize.php');
 
 require_once 'header.php';
 $total =0;
- 
+ $settings = Settings::get_site_settings();
 if (isset($_SESSION['buyback_cartId'])){
  $cart_id = $_SESSION['buyback_cartId']; 
 } elseif(isset($_SESSION['user_id'])){ 
@@ -18,31 +18,75 @@ if(!isset($_SESSION['user_id'])){
     exit;
 } else {
 	$user_id = $_SESSION['user_id'];
-	$fname = $_SESSION['first_name']; echo "First name is: ".$fname;
+	$fname = $_SESSION['first_name']; 
 	$lname = $_SESSION['last_name'];
+	$email = $_SESSION['email'];
 }
-//echo "cart id is: ".$cart_id;die;
-/* $results = Cart::update_userId($cart_id,$user_id);
-if($results && $results->update_user()) {
-	$session->message("All ok.");
-} else {
-	$session->message("Please log in before you go through checkout.");
-    redirect_to('login.php');
-    exit;
-}*/
+
+if(isset($_POST['paymentType'])){
+	$weight = Cart::get_weight($cart_id, $user_id);
+	if(!$weight){
+		$weight = 3;
+	}
+	if($_POST['paymentType'] == 'paypal'){
+        $results = Checkout::paypal_checkout($cart_id,$user_id,$_POST['paymentType'],trim($_POST['paypalEmail']));
+		if($results &&  $results->create() && ($track = Checkout::rocket($weight))) {
+			Checkout::send_email($track, $email);
+			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+		}else {
+			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
+		}
+	} elseif ($_POST['paymentType']== 'check') {
+		$params = array('cart_id'=>$cart_id,
+						'user_id'=>$user_id,
+						'pay_type'=>$_POST['paymentType'],
+						'email'=>$email,
+						'addr_1'=>$_POST['addr_1'],
+						'addr_2'=>$_POST['addr_2'],
+						'city'=>$_POST['city'],
+						'state'=>$_POST['state'],
+						'zip'=>$_POST['zip'],
+						);
+		$results = Checkout::check_checkout($params);
+		if($results && $results->create() && ($track = Checkout::rocket($weight))) {
+			Checkout::send_email($track, $email);
+			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+		} else {
+			$message="There was an error processing your request.  Please verify that you filled in all the required information.";
+		}
+	}
+	
+	$id = Checkout::get_checkout_id($cart_id, $user_id);
+	$params = array('id'=>$id,
+					'cart_id'=>$cart_id,
+					'user_id'=>$user_id,
+					'pay_type'=>$_POST['paymentType'],
+					'email'=>$email,
+					'addr_1'=>$_POST['addr_1'],
+					'addr_2'=>$_POST['addr_2'],
+					'city'=>$_POST['city'],
+					'state'=>$_POST['state'],
+					'zip'=>$_POST['zip'],
+					'tracking'=>$track,
+					);
+	$results = Checkout::update_tracking($params);
+	if($results && $results->update()) {
+		$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+	}
+}
 
 $cart = Cart::get_cart_contents($cart_id);
-$settings = Settings::get_site_settings();
+
 $max = count($cart);
 
 ?>
 <h2><?php echo output_message($message); ?></h2>
 
- <div id="page"> 
+ <div id="page" class="container"> 
             <h2>Review Cart</h2>
             <strong>Take a moment to look over the books you&#39;re selling before you finalize your order.</strong><br>
             <?php if (!empty($cart)): ?>
-            <table width="650" cellpadding="2" cellspacing="2" id="book-search">
+            <table width="650" cellpadding="2" cellspacing="2" id="book-search" class="table">
             	<tr style="color:#FFF;">
                 <th height="30" bgcolor="#666666">&nbsp;</th>
                 <th bgcolor="#666666">Product</th>
@@ -53,8 +97,8 @@ $max = count($cart);
             </tr> 
                 <?php for ($i=0;$i<$max;$i++):?>
                                 <tr valign="top">                                
-                                    <td width="135"><img src="<?php echo $cart[$i]->image; ?>" width="125" height="100" alt="<?php echo $cart[$i]->title; ?>" class="cover"></td>
-                                    <td width="300" style="vertical-align:top">
+                                    <td ><img src="<?php echo $cart[$i]->image; ?>" width="110" height="110" alt="<?php echo $cart[$i]->title; ?>" class="cover"></td>
+                                    <td  style="vertical-align:top">
                                         <strong><?php echo $cart[$i]->title; ?></strong>
                                         <br><?php if(!empty($cart[$i]->author)){?>
                                         by <?php echo $cart[$i]->author; }?>
@@ -88,7 +132,7 @@ if($results && $results->update_user()) {
                             <?php endfor; ?>         
             </table>
             <div class="bottom-sale">
-                    <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_expire." days"))); ?>.
+                    <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_expire." days"))); ?>.</p>
                     <?php
                         if($total < $settings->min_amount):
                             echo '<p><span class="warning">You must sell a minimum of $'. $settings->min_amount . 
@@ -97,80 +141,144 @@ if($results && $results->update_user()) {
                     ?>
                    <h3>Your Sale: $<?php echo number_format($total,2,'.','');?></h3>
             </div>                       
-            <form id ="buyback_processOrder" class="clear-from" method="POST" action="processOrder.php">
-                <input type="hidden" name="paymentType" value="none" checked="checked">
-                <h2>Payment Information</h2>
-                <fieldset>
-                    <span class="question-form">How would you like to be paid?</span>
-                    <ol>
-                        <li>
-                            <div class="radio-input">
-                                    <input type="radio" name="paymentType" value="paypal" id="paypal">
-                                    <label for="paypal">PayPal</label>
-                            </div>
-                                <strong>Paid within 10 days of receipt of your book.</strong>
-                            <fieldset>                              
-                                <ol class="subtitle">
-                                    <li>
-                                        <label cass="subtitle" for="paypalEmail">Your PayPal Email:</label>
-                                        <input type="text" name="paypalEmail" id="paypalEmail" value="<?php echo $user['paypal_email']; ?>">
-                                    </li>
-                                </ol>
-                            </fieldset>
-                        </li>
-                        <li class="row">
-                            <div class="radio-input">
-                                  <input type="radio" name="paymentType" value="check" id="check">
-                            <label for="check">Check</label>
-                            </div>                          
-                                <strong>Paid within 10 days of receipt of your book. <p> Please allow an additional 
-                                5-7 days for check to be delivered in the mail.</p></strong>
-                            <fieldset  id="data-paid">
-                                <legend>Your mailing address:</legend>
-                                <ol>
-                                    <li>
-                                        <label for="first_name">First Name</label>
-                                        <?php echo  $fname;?>
-                                    </li>
-                                    <li>
-                                        <label for="last_name">Last Name</label>
-                                        <?php echo $lname; ?>
-                                    </li>
-                                    <li>
-                                        <label for="address1">Address, line 1</label>
-                                        <input type="text" name="address1" value="<?php echo $user['address1']; ?>">
-                                    </li>
-                                    <li>
-                                        <label for="address2">Address, line 2</label>
-                                        <input type="text" name="address2" value="<?php echo $user['address2']; ?>">
-                                    </li>
-                                    <li>
-                                        <label for="city">City</label>
-                                        <input type="text" name="city" value="<?php echo $user['city']; ?>">
-                                    </li>
-                                    <li>
-                                        <label for="state">State</label>
-                                        <?php //echo buyback_getStateList($user['state']); ?>
-                                    </li>
-                                    <li>
-                                        <label for="zip">Zip Code</label>
-                                        <input type="text" name="zip" value="<?php echo $user['zip']; ?>">
-                                    </li>
-                                </ol>
-                            </fieldset>
-                        </li>
-                    </ol>
-                </fieldset>
-                    <div class="bottom-sale">
-                    <input type="submit" value="Create Order">                
-                    <?php endif; ?>                    
-                    <a class="checkout" href="cart.php">Return to your cart to make changes</a>
+<form id ="buyback_processOrder" class="clear-from form-horizontal" method="POST" action="" role="form">
+	 <input type="hidden" name="paymentType" value="none" checked="checked">
+    <h2>Payment Information</h2>
+    <fieldset>
+        <h3>How would you like to be paid?</h3>
+		<div class="radio">
+			<label>
+                <input type="radio" name="paymentType" value="paypal" id="paypal" data-toggle="collapse" data-target="#data-paid" checked="checked">
+                PayPal
+            </label>
+        </div>
+        <strong>Paid within 10 days of receipt of your book.</strong>
+        <fieldset>  
+        	 <div class="form-group">                            
+                <label for="paypalEmail" class="col-sm-2 control-label">Your PayPal Email:
+            	</label>
+                    <div class="col-sm-10">
+                    <input type="email" name="paypalEmail" id="paypalEmail" placeholder="PayPal Email" value="<?php echo $email; ?>">
                     </div>
-                    <?php else: ?>
-                        <p>Your cart is empty!</p>                    
-                    <?php endif; ?>                   
-            </form>
+			</div>
+        </fieldset>
+            <div class="radio">
+			<label>
+                <input type="radio" name="paymentType" value="check" id="check" data-toggle="collapse" data-target="#data-paid">
+                Check
+            </label>
+            </div>                         
+            <strong>Paid within 10 days of receipt of your book. <p> Please allow an additional 5-7 days for check to be delivered in the mail.</p></strong>
+            
+            <fieldset  id="data-paid" class="collapse">
+                <legend>Your mailing address:</legend>
+                <div class="form-group">
+			    <label class="col-sm-2 control-label">First Name</label>
+			    	<div class="col-sm-10">
+			      	<p class="form-control-static"><?php echo  $fname;?></p>
+			    	</div>
+			  </div>
+              <div class="form-group">
+			    <label class="col-sm-2 control-label">Last Name</label>
+			    	<div class="col-sm-10">
+			      	<p class="form-control-static"><?php echo  $lname;?></p>
+			    	</div>
+			  </div>      
+ 	<div class="form-group">    
+	    <label for="addr_1" class="col-sm-2 control-label">Address, line 1</label>
+	    <div class="col-sm-10">
+	    <input type="text" name="addr_1" >
+	    </div>
+    </div>
+    <div class="form-group">    
+	    <label for="addr_2" class="col-sm-2 control-label">Address, line 2</label>
+	    <div class="col-sm-10">
+	    <input type="text" name="addr_2" >
+	    </div>
+    </div>
+     <div class="form-group">
+         <label for="city"class="col-sm-2 control-label">City</label>
+         <div class="col-sm-10">
+            <input type="text" name="city" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="state"class="col-sm-2 control-label">State</label>
+        <div class="col-xs-4">
+        <select class="form-control" name="state">
+        	<option value=""></option>
+        	<option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+    	</select>
+    	</div>
+	</div>
+	<div class="form-group">
+    	<label for="zip"class="col-sm-2 control-label">Zip Code</label>                     
+        <div class="col-sm-10">                
+            <input type="text" name="zip" >
+        </div>
+    </div>    
+            </fieldset>
+    </fieldset>
+        <div class="bottom-sale">
+        <input type="submit" value="Create Order" class="btn btn-success btn-default active" role="button">                
+        <?php endif; ?>                    
+        <a  href="cart.php" class="btn btn-primary btn-default " role="button">Return to your cart to make changes</a>
+        </div>
+        <?php else: ?>
+            <p>Your cart is empty!</p>                    
+        <?php endif; ?>                   
+</form>
   </div>
+  <br>
 <?
 include 'footer.php';
 ?>

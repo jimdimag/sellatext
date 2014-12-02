@@ -1,5 +1,5 @@
 <?php 
-ini_set('display_errors',"1");
+
 $title="Home";
 require_once('includes/initialize.php');
  include ('header.php'); 

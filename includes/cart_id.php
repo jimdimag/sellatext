@@ -19,6 +19,40 @@ class Cart extends DatabaseObject {
 	public $weight;
     
     
+	public function isbn1013($isbn) {
+	   $isbn = trim($isbn);
+	   if(strlen($isbn) == 12){ // if number is UPC just add zero
+	      $isbn13 = '0'.$isbn;}
+	   else
+	   {
+	      $isbn2 = substr("978" . trim($isbn), 0, -1);
+	      $sum13 = static::genchksum13($isbn2);
+	      $isbn13 = "$isbn2$sum13";
+	   }
+   return ($isbn13);
+}
+
+public function genchksum13($isbn) {
+   $isbn = trim($isbn);
+   $tb = 0;
+   for ($i = 0; $i <= 12; $i++)
+   {
+      $tc = substr($isbn, -1, 1);
+      $isbn = substr($isbn, 0, -1);
+      $ta = ($tc*3);
+      $tci = substr($isbn, -1, 1);
+      $isbn = substr($isbn, 0, -1);
+      $tb = $tb + $ta + $tci;
+   }
+   
+   $tg = ($tb / 10);
+   $tint = intval($tg);
+   if ($tint == $tg) { return 0; }
+   $ts = substr($tg, -1, 1);
+   $tsum = (10 - $ts);
+   return $tsum;
+}
+	
     public function get_new_cart_id() { 
 	global $database;
 	$sql = "SELECT MAX(cart_id) as cart_id FROM " .static::$table_name;
@@ -38,6 +72,10 @@ class Cart extends DatabaseObject {
 	public function add_to_cart($cart_id,$isbn) { 
 		global $database;
 		$isbn = $database->escape_value($isbn);
+		$isbn = str_replace("-", "", $isbn);
+			if(strlen($isbn) != 13){
+			$isbn = static::isbn1013($isbn);
+			}
 		$amazon = Amazon::get_info($isbn);
 	//get cart id if there is not one
 		if (empty($cart_id)) {
@@ -113,6 +151,23 @@ class Cart extends DatabaseObject {
 		}
 		return $cart;
 	}
+	
+	public function get_weight($cart_id, $user_id) {
+		global $database;
+		$sql = "SELECT SUM(weight) as weight, id FROM " .static::$table_name;
+		$sql .=" where cart_id = " .$cart_id;
+		$sql .=" AND user_id= " .$user_id;
+		$result_set = $database->query($sql); 
+	if($result_set) {
+    $row = $database->fetch_array($result_set);
+		$weight = $row['weight']; 
+        return ($weight);
+    } else {
+        return FALSE;
+    }
+	
+    
+	}//get_weight
 	
 } // Class
 
