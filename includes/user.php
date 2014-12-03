@@ -5,18 +5,19 @@ require_once(LIB_PATH.DS.'database.php');
 class User extends DatabaseObject{
  
 protected static $table_name = "sellatext_users"; 
-//protected static $db_fields = array('id' 'email', 'password','fname','lname','addr_1','addr_2','city','state','zip','phone'); 
+protected static $db_fields =array('id', 'email','fname','lname','addr_1','addr_2','city','state','zip','phone');  //array('id', 'addr_1','addr_2','city','state','zip','phone'); 'email', 'password','fname','lname',
 public $id;  
 public $email;
-public $password;
+/*public $password;*/
 public $fname;
 public $lname;
-/*public $addr_1;
-  public $addr_2;
-  public $city;
-  public $state;
-  public $zip;
-  public $phone */
+public $addr_1;
+public $addr_2;
+public $city;
+public $state;
+public $zip;
+public $phone;
+   
 public static function authenticate($email="", $password="") {
        global $database;
        $email = $database->escape_value($email);
@@ -98,6 +99,54 @@ public function register_user($params) {
 	}*/
 }
  
+ public function update_user($params) {
+ 	if(!empty($params['email'])) {
+		$user = new User();
+		$user->id = $params['user_id'];
+		$user->fname = $params['fname'];
+		$user->lname = $params['lname']; 
+		$user->email = $params['email'];
+		$user->addr_1 = $params['addr_1'];
+		$user->addr_2 = $params['addr_2'];
+		$user->city = $params['city'];
+		$user->state = $params['state'];
+		$user->zip = $params['zip'];
+		return $user;
+ 	} else {
+ 		return FALSE;
+ 	}
+ 			
+ }//update_user
+ 
+ public function edit_user($params) {
+ 	if(!empty($params['email'])) {
+		$user = new User();
+		$user->id = $params['user_id'];
+		$user->fname = $params['fname'];
+		$user->lname = $params['lname']; 
+		$user->email = $params['email'];
+		$user->addr_1 = $params['addr_1'];
+		$user->addr_2 = $params['addr_2'];
+		$user->city = $params['city'];
+		$user->state = $params['state'];
+		$user->zip = $params['zip'];
+		$user->phone = $params['phone'];
+		return $user;
+ 	} else {
+ 		return FALSE;
+ 	}
+ }//edit_user
+ 
+public function get_user($user_id){
+	global $database;
+	$db_fields = array('id', 'email','fname','lname','addr_1','addr_2','city','state','zip','phone'); 
+	$sql = "SELECT * FROM ".static::$table_name;
+	$sql .= " WHERE id = ".$user_id. " LIMIT 1"; 
+	$result_array = static::find_by_sql($sql);
+	return !empty($result_array) ? $result_array : false;
+	
+	}//get_user
+ 
 	public function generatePassword($length=9, $strength=0) {
 	    $vowels = 'aeuy';
 	    $consonants = 'bdghjmnpqrstvz';
@@ -128,8 +177,20 @@ public function register_user($params) {
     return $password;
 	} 
 	
-public function set_password() {
-	
+public function set_password($user_id,$pass) {
+	global $database;
+	$user_id = $database->escape_value($user_id);
+	$password = $database->escape_value($pass);
+	$sql = "Update " .static::$table_name;
+	$sql .= " SET Password = '" .$pass. "'";
+	$sql .=" WHERE id = ".$user_id;
+	if($database->query($sql)) {
+		
+		return TRUE;
+	} else {
+		
+		return FALSE;
+	}
 }  
 
 }

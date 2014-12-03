@@ -30,6 +30,7 @@ require_once (LIB_PATH.DS."guides.php");
 require_once(LIB_PATH.DS."user.php");
 require_once(LIB_PATH.DS."cart_id.php");
 require_once(LIB_PATH.DS."checkout.php");
+require_once(LIB_PATH.DS."user_history.php");
 
 //Load files for label generation
 require_once(SHIP_PATH.DS.'autoload.php');

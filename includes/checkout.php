@@ -6,18 +6,18 @@ require_once(LIB_PATH.DS.'database.php');
 class Checkout extends DatabaseObject {
     
     protected static $table_name = "sellatext_checkout";
-    protected static $db_fields = array('id','cart_id', 'user_id', 'pay_type', 'email', 'addr_1','addr_2','city','state','zip','tracking');
+    protected static $db_fields = array('id','cart_id', 'user_id', 'pay_type', 'tracking', 'ship_by');//'email', 'addr_1','addr_2','city','state','zip',
     public $id;
     public $cart_id;
     public $user_id;
     public $pay_type;
-	public $email;
+	/*public $email;
 	public $addr_1;
 	public $addr_2;
 	public $city;
-	public $state;
-	public $zip;
+	public $state;*/
 	public $tracking;
+	public $ship_by;
 	
 	public function get_checkout_id($cart_id, $user_id) {
 		global $database;
@@ -49,18 +49,11 @@ class Checkout extends DatabaseObject {
 	} //paypal_checkout
 	
 	public function check_checkout($params) {
-		if(!empty($params['cart_id']) && !empty($params['user_id'])&& !empty($params['addr_1'])) {
+		if(!empty($params['cart_id']) && !empty($params['user_id'])&& !empty($params['pay_type'])) {
 			$checkout = new Checkout();
 			$checkout->cart_id = $params['cart_id'];
 			$checkout->user_id = $params['user_id'];
 			$checkout->pay_type = $params['pay_type'];
-			$checkout->email = $params['email'];
-			$checkout->addr_1 = $params['addr_1'];
-			$checkout->addr_2 = $params['addr_2'];
-			$checkout->city = $params['city'];
-			$checkout->state = $params['state'];
-			$checkout->zip = $params['zip'];
-			
 			return $checkout;
 		} else {
 			
@@ -162,13 +155,8 @@ class Checkout extends DatabaseObject {
 			$checkout->cart_id = $params['cart_id'];
 			$checkout->user_id = $params['user_id'];
 			$checkout->pay_type = $params['pay_type'];
-			$checkout->email = $params['email'];
-			$checkout->addr_1 = $params['addr_1'];
-			$checkout->addr_2 = $params['addr_2'];
-			$checkout->city = $params['city'];
-			$checkout->state = $params['state'];
-			$checkout->zip = $params['zip'];
 			$checkout->tracking = $params['tracking'];
+			$checkout->ship_by = $params['ship'];
 			
 			return $checkout;
 		} else {

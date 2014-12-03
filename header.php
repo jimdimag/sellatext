@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors',"1");
-//$msg->display();
+
  //include_once("analyticstracking.php");
 ?>
 <!DOCTYPE html>

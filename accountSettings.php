@@ -11,43 +11,45 @@ if(!($session->is_logged_in())) {
     redirect_to('login.php');
     exit;
 }
+$user_id = $_SESSION['user_id'];
 
-/*$user = getApiData('get_customer', array('customer_id'=>$_SESSION['buyback_userId']));
-$result = getApiData('get_customer_order_history', array('customer_id'=>$_SESSION['buyback_userId']));
-$orderHistory = $result['order_history'];*/
+/*$user = getApiData('get_customer', array('customer_id'=>$_SESSION['buyback_userId']));*/
+$customer = User::get_user($user_id);
+$orderHistory = UserHistory::get_history($user_id);
+$max = count($orderHistory);
 ?>
 <div id="page" class="container"> 
                             <h1>Your Account Details</h1>
                             <div id="navPass">
                                 <ul>
                                     <li><a href="accountSettingsEdit.php">Edit Account</a></li>
-                                    <li><a href="forgotPassword.php">Change Password</a></li>
+                                    <li><a href="changePassword.php">Change Password</a></li>
                                 </ul>
                             </div><br><br>
                             <dl>
                                 <dt>Name:&nbsp;</dt>
-                                <dd><?php echo $user['Customer']['first_name'].' '.$user['Customer']['last_name']; ?></dd>
+                                <dd><?php echo $customer[0]->fname.' '.$customer[0]->lname; ?></dd>
 
                                 <dt>Email:&nbsp; </dt>
-                                <dd><?php echo $user['Customer']['email']; ?></dd>
+                                <dd><?php echo  $customer[0]->email; ?></dd>
 
                                 <dt>Phone:&nbsp; </dt>
-                                <dd><?php echo buyback_formatPhoneNumber($user['Customer']['phone']); ?></dd>
+                                <dd><?php echo $customer[0]->phone; ?></dd>
 
                                 <dt>Address:&nbsp; </dt>
                                 <dd>
                                 <?php
-                                    echo $user['Customer']['address1'];
-                                    if(!empty($user['Customer']['address2'])){
-                                        echo '<br>'.$user['Customer']['address2'];
+                                    echo $customer[0]->addr_1;
+                                    if(!empty($customer[0]->addr_2)){
+                                        echo '<br>'.$customer[0]->addr_2;
                                     }
-                                    echo '<br>'.$user['Customer']['city'].', '.$user['Customer']['state'].' '.$user['Customer']['zip'];
+                                    echo '<br>'.$customer[0]->city.', '.$customer[0]->state.' '.$customer[0]->zip;
                                 ?>
                                 </dd>
                             </dl>
         <?php if(!empty($orderHistory)): ?>
                         <h2>Your BuyBack History</h2>
-                        <table class="blue-table">
+                        <table class="table">
                                 <tr>
                                         <th>Order Number</th>
                                         <th>Mailing Label</th>
@@ -57,17 +59,17 @@ $orderHistory = $result['order_history'];*/
                                         <th>Quote</th>
                                         <th>Paid</th>
                                 </tr>
-                        <?php foreach($orderHistory as $order): ?>
-                                <tr class="<?php echo $order['status']; ?>">
-                                        <td><a href="<?php echo $buybackPageNames['orderDetails']; ?>?id=<?php echo $order['id']; ?>">#<?php echo $order['id']; ?></a></td>
-                                        <td><a href="<?php echo $order['shipping_label']; ?>">Link</a></td>
-                                        <td><?php echo date('F j, Y ', strtotime($order['created'])); ?></td>
-                                        <td><?php echo date('F j, Y ', strtotime($order['ship_by'])); ?></td>
-                                        <td><?php echo $order['status']; ?></td>
-                                        <td>$<?php echo $order['amount_quoted']; ?></td>
-                                        <td><?php echo $order['amount_paid'] != '' ? '$'.$order['amount_paid'] : '--'; ?></td>
+                        <?php for ($i=0;$i<$max;$i++): ?>
+                                <tr class="<?php echo $orderHistory[$i]->status; ?>">
+                                        <td><a href="orderDetails.php?id=<?php echo $orderHistory[$i]->cart_id ?>">#<?php echo $orderHistory[$i]->cart_id; ?></a></td>
+                                        <td><a href="tracking/label"<?php echo $orderHistory[$i]->tracking; ?>".gif">Link</a></td>
+                                        <td><?php echo $orderHistory[$i]->submitted; ?></td>
+                                        <td><?php echo date('F j, Y ', strtotime($orderHistory[$i]->ship_by)); ?></td>
+                                        <td><?php echo $orderHistory[$i]->status; ?></td>
+                                        <td>$<?php echo $orderHistory[$i]->price; ?></td>
+                                        <td><?php //echo $order['amount_paid'] != '' ? '$'.$order['amount_paid'] : '--'; ?></td>
                                 </tr>
-                        <?php endforeach; ?>
+                        <?php endfor; ?>
                         </table>
         <?php else: ?>
             <h3>Your BuyBack History</h3>

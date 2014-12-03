@@ -15,7 +15,7 @@ public static function find_all($id=0) {
    
 public static function find_by_id($id=0) {
       global $database;
-      $result_array = static::find_by_sql("select * from ".static::$table_name." where user_id=".$database->escape_value($id));
+      $result_array = static::find_by_sql("select * from ".static::$table_name." where id=".$database->escape_value($id));
       return !empty($result_array) ? array_shift($result_array) : FALSE;
    }
    
@@ -141,7 +141,8 @@ public function update_user() {
     return ($database->affected_rows() >= 1) ? TRUE : FALSE;
 	
 }
-    
+
+
 }
 
 ?>

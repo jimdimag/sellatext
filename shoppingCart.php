@@ -6,6 +6,7 @@ require_once('includes/initialize.php');
 require_once 'header.php';
 $total =0;
  $settings = Settings::get_site_settings();
+ $shipBy = strftime(" %m/%d/%y",(strtotime("+".$settings->days_expire." days"))); 
 if (isset($_SESSION['buyback_cartId'])){
  $cart_id = $_SESSION['buyback_cartId']; 
 } elseif(isset($_SESSION['user_id'])){ 
@@ -27,12 +28,12 @@ if(isset($_POST['paymentType'])){
 	$weight = Cart::get_weight($cart_id, $user_id);
 	if(!$weight){
 		$weight = 3;
-	}
+	} 
 	if($_POST['paymentType'] == 'paypal'){
         $results = Checkout::paypal_checkout($cart_id,$user_id,$_POST['paymentType'],trim($_POST['paypalEmail']));
 		if($results &&  $results->create() && ($track = Checkout::rocket($weight))) {
-			Checkout::send_email($track, $email);
-			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+			//Checkout::send_email($track, $email);
+			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by " .$shipBy )); 
 		}else {
 			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
 		}
@@ -40,6 +41,11 @@ if(isset($_POST['paymentType'])){
 		$params = array('cart_id'=>$cart_id,
 						'user_id'=>$user_id,
 						'pay_type'=>$_POST['paymentType'],
+						);
+						
+					$params2 = array('user_id'=>$user_id,
+					'fname'=>$fname,
+					'lname'=>$lname,
 						'email'=>$email,
 						'addr_1'=>$_POST['addr_1'],
 						'addr_2'=>$_POST['addr_2'],
@@ -48,30 +54,31 @@ if(isset($_POST['paymentType'])){
 						'zip'=>$_POST['zip'],
 						);
 		$results = Checkout::check_checkout($params);
-		if($results && $results->create() && ($track = Checkout::rocket($weight))) {
-			Checkout::send_email($track, $email);
-			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+		$results2 = User::update_user($params2);
+		if($results && $results->create() && ($track = Checkout::rocket($weight))&& $results2->update()) {
+			//Checkout::send_email($track, $email);
+			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy ));  
 		} else {
 			$message="There was an error processing your request.  Please verify that you filled in all the required information.";
 		}
 	}
 	
 	$id = Checkout::get_checkout_id($cart_id, $user_id);
+	$ship = strtotime("+".$settings->days_expire." days");
+	$shipBy2=date("Y-m-d", $ship);
+	
 	$params = array('id'=>$id,
 					'cart_id'=>$cart_id,
 					'user_id'=>$user_id,
 					'pay_type'=>$_POST['paymentType'],
-					'email'=>$email,
-					'addr_1'=>$_POST['addr_1'],
-					'addr_2'=>$_POST['addr_2'],
-					'city'=>$_POST['city'],
-					'state'=>$_POST['state'],
-					'zip'=>$_POST['zip'],
 					'tracking'=>$track,
+					'ship'=>$shipBy2,
 					);
+					
+	
 	$results = Checkout::update_tracking($params);
 	if($results && $results->update()) {
-		$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  %m/%d/%y", (strtotime("+".$settings->days_expire." days")))); 
+		$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy )); 
 	}
 }
 

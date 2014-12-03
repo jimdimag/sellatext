@@ -15,7 +15,7 @@ if(isset($_POST['email'])){
     
     $results = User::get_id(trim($_POST['email']));
     if($results){  
-             $id = $results->user_id;
+             $id = $results;
 		     
          // Generate the password, save it to the API, and send it.
         $genPassword = User::generatePassword();
