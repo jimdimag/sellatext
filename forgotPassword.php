@@ -26,9 +26,8 @@ if(isset($_POST['email'])){
             $subject = 'Your new SellAText.net password';
             $message1 = 'Your new temporary password: '.$genPassword;
             if(mail($to, $subject, $message1)){
-                $message="Check your mail. Password sent!";
-                header('Location: '.$buybackPageNames['forgotPassword']);
-                exit();
+                $message="Check your email. Password sent!";
+                redirect_to('login.php');
             } else {
                 $message="An error occurred, and your email was not sent.";
             }
@@ -43,8 +42,9 @@ if(isset($_POST['email'])){
 
 
 ?>
-<h2><?php echo output_message($message); ?></h2>
+
 <div id="page" class="container"> 
+	<h2><?php echo output_message($message); ?></h2>
             <form  id="user-forgot-pass" method="POST" action="" role="form">                                
                 <h1>Reset Password</h1>
                 <strong>Did you forget your password?</strong>
