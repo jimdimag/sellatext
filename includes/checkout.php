@@ -6,7 +6,7 @@ require_once(LIB_PATH.DS.'database.php');
 class Checkout extends DatabaseObject {
     
     protected static $table_name = "sellatext_checkout";
-    protected static $db_fields = array('id','cart_id', 'user_id', 'pay_type', 'tracking', 'ship_by');//'email', 'addr_1','addr_2','city','state','zip',
+    protected static $db_fields = array('id','cart_id', 'user_id', 'pay_type', 'tracking', 'ship_by','status');//'email', 'addr_1','addr_2','city','state','zip',
     public $id;
     public $cart_id;
     public $user_id;
@@ -14,8 +14,8 @@ class Checkout extends DatabaseObject {
 	/*public $email;
 	public $addr_1;
 	public $addr_2;
-	public $city;
-	public $state;*/
+	public $city;*/
+	public $status;
 	public $tracking;
 	public $ship_by;
 	
@@ -63,7 +63,7 @@ class Checkout extends DatabaseObject {
 	} //check_checkout
 	
 	
-	public function rocket($weight)	{ 
+	public function rocket($params)	{ 
 		$shipment = new \RocketShipIt\Shipment('UPS');
 
 		$shipment->setParameter('toCompany', 'SellAText.net');
@@ -72,12 +72,14 @@ class Checkout extends DatabaseObject {
 		$shipment->setParameter('toCity', 'Nashua');
 		$shipment->setParameter('toState', 'NH');
 		$shipment->setParameter('toCode', '03060');
-		
+		/*if (isset($params['fname']) && isset($params['lname'])) {
+			$shipment->setParamerter('fromName',$params['fname']." ".$params['lname']);
+		}*/
 		$package = new \RocketShipIt\Package('UPS');
 		/*$package->setParameter('length','5');
 		$package->setParameter('width','5');
 		$package->setParameter('height','5');*/
-		$package->setParameter('weight',$weight);
+		$package->setParameter('weight',$params['weight']);
 		
 		$shipment->addPackageToShipment($package);
 		
@@ -151,12 +153,13 @@ class Checkout extends DatabaseObject {
 	public function update_tracking($params){
 		if(!empty($params['cart_id']) && !empty($params['user_id'])&& !empty($params['tracking'])) {
 			$checkout = new Checkout();
-			$checkout->id = $params['id'];
-			$checkout->cart_id = $params['cart_id'];
-			$checkout->user_id = $params['user_id'];
+			$checkout->id 		= $params['id'];
+			$checkout->cart_id 	= $params['cart_id'];
+			$checkout->user_id 	= $params['user_id'];
 			$checkout->pay_type = $params['pay_type'];
 			$checkout->tracking = $params['tracking'];
-			$checkout->ship_by = $params['ship'];
+			$checkout->ship_by 	= $params['ship'];
+			$checkout->status	= 1;
 			
 			return $checkout;
 		} else {

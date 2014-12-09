@@ -18,7 +18,7 @@ $customer = User::get_user($user_id);
 $orderHistory = UserHistory::get_history($user_id);
 $max = count($orderHistory);
 ?>
-<div id="page" class="container"> 
+<div id="page" class="container non-printable"> 
                             <h1>Your Account Details</h1>
                             <div id="navPass">
                                 <ul>
@@ -59,23 +59,43 @@ $max = count($orderHistory);
                                         <th>Quote</th>
                                         <th>Paid</th>
                                 </tr>
-                        <?php for ($i=0;$i<$max;$i++): ?>
-                                <tr class="<?php echo $orderHistory[$i]->status; ?>">
-                                        <td><a href="orderDetails.php?id=<?php echo $orderHistory[$i]->cart_id ?>">#<?php echo $orderHistory[$i]->cart_id; ?></a></td>
-                                        <td><a href="tracking/label"<?php echo $orderHistory[$i]->tracking; ?>".gif">Link</a></td>
-                                        <td><?php echo $orderHistory[$i]->submitted; ?></td>
-                                        <td><?php echo date('F j, Y ', strtotime($orderHistory[$i]->ship_by)); ?></td>
-                                        <td><?php echo $orderHistory[$i]->status; ?></td>
-                                        <td>$<?php echo $orderHistory[$i]->price; ?></td>
-                                        <td><?php //echo $order['amount_paid'] != '' ? '$'.$order['amount_paid'] : '--'; ?></td>
-                                </tr>
-                        <?php endfor; ?>
+    <?php for ($i=0;$i<$max;$i++): ?>
+            <tr class="<?php echo $orderHistory[$i]->status; ?>">
+                    <td><a href="orderDetails.php?id=<?php echo $orderHistory[$i]->cart_id ?>">#<?php echo $orderHistory[$i]->cart_id; ?></a></td>
+            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1" data-whatever="<?php echo $orderHistory[$i]->tracking; ?>"><?php echo $orderHistory[$i]->tracking; ?></button>
+                    	<!--<a data-toggle="modal" data-target="#myModal"><?php echo $orderHistory[$i]->tracking; ?></a>--></td>
+                    <td><?php echo $orderHistory[$i]->submitted; ?></td>
+                    <td><?php echo date('F j, Y ', strtotime($orderHistory[$i]->ship_by)); ?></td>
+                    <td><?php echo $orderHistory[$i]->status; ?></td>
+                    <td>$<?php echo $orderHistory[$i]->price; ?></td>
+                    <td><?php //echo $order['amount_paid'] != '' ? '$'.$order['amount_paid'] : '--'; ?></td>
+            </tr>
+    <?php endfor; ?>
                         </table>
         <?php else: ?>
             <h3>Your BuyBack History</h3>
             <p>You have never placed an order!</p>
         <?php endif; ?>
 </div>
+<div class="modal fade printable" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close non-printable" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title non-printable" id="myModalLabel">Mailing Label</h4>
+      </div>
+      <div class="modal-body">
+      	
+        <img  id="track" src="tracking/label1ZE32V850395032849.gif" height="500px" width="500px">
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default non-printable" id="print" onclick="window.print()">Print Label</button>
+        <button type="button" class="btn btn-default non-printable" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->   
 <?
 include 'footer.php';
 ?>

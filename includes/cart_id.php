@@ -4,7 +4,7 @@ require_once(LIB_PATH.DS.'database.php');
 class Cart extends DatabaseObject {
     
     protected static $table_name = "sellatext_cart";
-    protected static $db_fields = array('id','cart_id', 'user_id', 'isbn', 'price', 'qty','title','image','binding','pages','author','weight');
+    protected static $db_fields = array('id','cart_id', 'user_id', 'isbn', 'price', 'qty','title','image','binding','pages','author','weight','rank');
     public $id;
     public $cart_id;
     public $user_id;
@@ -17,6 +17,7 @@ class Cart extends DatabaseObject {
 	public $pages;
 	public $author;
 	public $weight;
+	public $rank;
     
     
 	public function isbn1013($isbn) {
@@ -77,25 +78,25 @@ public function genchksum13($isbn) {
 			$isbn = static::isbn1013($isbn);
 			}
 		$amazon = Amazon::get_info($isbn);
+		
 	//get cart id if there is not one
 		if (empty($cart_id)) {
 			$cart_id = static::get_new_cart_id();
 		}
 		if(!empty($amazon['payPrice']) && !empty($isbn)) {
 			$cart = new Cart();
-			$cart->price = $amazon['payPrice'];
-			$cart->qty = $amazon['qty'];
-			$cart->cart_id =$cart_id;
-			$cart->isbn = $isbn;
-			$cart->title = $amazon['title'];
-			$cart->binding = $amazon['binding'];
-			$cart->image = $amazon['ImageURL'];
-			$cart->pages = $amazon['pages'];
-			$cart->author = $amazon['author'];
-			$cart->weight = $amazon['weight'];
-			/*if(isset($cart->id)) { 
-        		static::create($cart);
-    		}*/
+			$cart->price 	= $amazon['payPrice'];
+			$cart->qty_limit= $qtyLimit;
+			$cart->qty		= 1;
+			$cart->cart_id 	= $cart_id;
+			$cart->isbn 	= $isbn;
+			$cart->title 	= $amazon['title'];
+			$cart->binding 	= $amazon['binding'];
+			$cart->image 	= $amazon['ImageURL'];
+			$cart->pages 	= $amazon['pages'];
+			$cart->author 	= $amazon['author'];
+			$cart->weight 	= $amazon['weight'];
+			$cart->rank		= $amazon['rank'];
 		}
 		return $cart;
 	}
@@ -165,9 +166,30 @@ public function genchksum13($isbn) {
     } else {
         return FALSE;
     }
-	
-    
 	}//get_weight
+	
+	public function set_cart_qty($id,$qty) { 
+		global $database;
+		$sql = "SELECT isbn,rank FROM " .static::$table_name;
+		$sql .=" WHERE id = " .$database->escape_value($id);
+		$result_set = $database->query($sql); 
+		if($result_set) {
+	    $row = $database->fetch_array($result_set);
+			$isbn = $row['isbn']; 
+			$rank = $row['rank']; 
+			//if cartt qty < qty limit then... else return false
+			$qtyLimit = Qty::get_qty_limit($isbn,$rank);
+				if($qty > $qtyLimit){
+					
+					return FALSE;
+				} else {
+					$cart = new Cart();
+					$cart->id = $id;
+					$cart->qty = $qty;
+					return $cart;
+					}//qty limit check
+		}//result_set
+	}//set_qty_limit
 	
 } // Class
 

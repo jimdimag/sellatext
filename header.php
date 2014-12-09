@@ -1,6 +1,6 @@
 <?php
 
-ini_set('display_errors',"1");
+//ini_set('display_errors',"1");
 
  //include_once("analyticstracking.php");
 ?>
@@ -16,8 +16,9 @@ ini_set('display_errors',"1");
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/respond.js"></script>
     
+    
 </head>
-<body>
+<body >
     <div class="row">
     <nav class="navbar navbar-default " role="navigation">
       <div class="container-fluid">
@@ -50,7 +51,7 @@ ini_set('display_errors',"1");
       </div><!-- /.container-fluid -->
     </nav>
   </div>
-  <header class="row">
+  <header class="row non-printable">
       <div class="logo col-lg-8 col-sm-7">
           
       <a href="index.php"><img  border="0" src='images/textbooks3.png' class="img-responsive pull-left"width="450px" height="300px" title="SellAText.net"></a>   

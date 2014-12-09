@@ -108,6 +108,21 @@ public function update() {
     return ($database->affected_rows() == 1) ? TRUE : FALSE;
 }
 
+public function update_track() {
+	global $database;
+   $attributes = $this->sanitized_attributes();
+   foreach($attributes as $key=>$value) {
+       $attribute_pairs[] = "{$key}='{$value}'";
+   }
+   $sql = "UPDATE " .static::$table_name." SET "; 
+   $sql .= join(", ", $attribute_pairs);
+    $sql .= " WHERE id =" .$database->escape_value($this->id);
+	$sql .=" and cart_id = " .$database->escape_value($this->cart_id);
+    $database->query($sql);
+    return ($database->affected_rows() == 1) ? TRUE : FALSE;
+}
+
+
 public function update_cart(){
 	global $database;
 	$sql = "UPDATE " .static::$table_name." SET qty= " .$database->escape_value($this->qty);

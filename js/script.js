@@ -1,37 +1,17 @@
-$(document).ready(function(){
 
-/*$("#isbn").keydown(function(e) {
-	 
-		//retrieve price to pay (and other data)
-    	if (e.keyCode == 9 || e.keyCode == 13) {
-    		$.ajax({
-				type: "POST",
-				url: "process.php",
-				async:false,
-				dataType: "json",
-				data: ({isbn: $('#isbn').val(), command:"add"}),
-				success: function(data){console.log(data);
-					$("#book-search").append('<tr><td>'+data.title+'</td><tr>
-				}// success
-			});// ajax
-		}//keycode
-});//isbn keydown
+$(document).ready(function() {
+	
+$('#myModal1').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var img = button.data('whatever'); // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this); 
+  modal.find('.modal-title').text('Mailing Label Tracking #' + img);
+  modal.find('.modal-body img ').attr("src","tracking/label"+img+".gif");
+});
 
-$("#emptyCart").click(function() {
-	$.ajax({
-				type: "POST",
-				url: "process.php",
-				async:false,
-				dataType: "json",
-				data: ({command:"emptyCart"}),
-				success: function(data){
-					
-				}// success
-			});// ajax
-});//empty cart
-$("#check").click(function() {
-	$("#data-paid").collapse({
-	  toggle: true
-	});
+/*$("#print").on('click', function () {
+	window.print();
 });*/
-});//ready function
+});

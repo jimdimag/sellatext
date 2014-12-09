@@ -4,10 +4,10 @@ require_once('includes/initialize.php');
 include 'header.php';
 ?>
 
-<script type="text/javascript" src="https://bookcellaronline.com/booksupply/site-clean/js/faq.js"></script>
+
 <div id="page" class="container">
     <div id="move">
-<h3>FAQ</h3><br><br>
+<h2>FAQ</h2><br><br>
 <div id="titles">
  <div id="left">
 <h2>General Info</h2>

@@ -6,8 +6,6 @@ $total=0;
 
 require_once 'header.php';
 
-
-
 //if (isset($_SESSION['buyback_cartId'])){
  $cart_id = $_SESSION['buyback_cartId']; 
 //} else {
@@ -35,17 +33,20 @@ if(isset($_POST['command'])){
             $session->message("An error occurred and your cart was not emptied.");
         }
     } else if($_POST['command'] == 'updateCart'){
-        foreach($_POST['qty'][$cart[$i]->id] as $id => $quantity){ 
+        foreach($_POST['qty'] as $id => $quantity){ 
+        	//if($quantity < $cart->qty){ 
             $results = Cart::set_cart_qty($id, $quantity);
             if($results && $results->update_cart()){
-            	$session->message("Cart updated!");
+            	$message="Cart updated!";
 		        } else {
-		            $session->message("An error occurred and your cart was not updated.");
+		            $session->message("Sorry, we can not take that many items. Your cart was not updated!");
 		        }
-            
+           
         } //for each
     }
 }
+
+
 /*if(isset($_GET['isbn13'])){ 
     $results = Cart::add_to_cart($cart_id,trim($_POST['isbn']));
 
@@ -53,7 +54,7 @@ if(isset($_POST['command'])){
             $msg->add('s', 'Item added!');
         } else {
 			$msg->add('e', array_pop($results['message']));
-        }
+        }<?php echo $cart[$i]->id; ?>)
 }
 */
 $cart = Cart::get_cart_contents($cart_id);
@@ -102,7 +103,8 @@ require_once 'search.php';
                                         ?>                                    
                                     </td>
 <td style="vertical-align:top"><?php echo '$' . number_format($cart[$i]->price, 2); ?></td>
-<td style="vertical-align:top; text-align:center"><?php echo $cart[$i]->qty; ?></td><!--<input type="text" name="qty[<?php echo $cart[$i]->id; ?>]" value="" style="width: 35px;">-->
+<td style="vertical-align:top; text-align:center"><input type="text" name="qty[<?php echo $cart[$i]->id; ?>]" value="<?php echo $cart[$i]->qty;?>" style="width: 35px;" ></td>
+
 <td style="vertical-align:top" class="total"><?php echo '$' .number_format(($cart[$i]->price * $cart[$i]->qty), 2); ?></td>
 <td style="vertical-align:top; text-align:center">
     <a href="delete.php?cart_item_id=<?php echo $cart[$i]->id;?>">
@@ -125,7 +127,7 @@ require_once 'search.php';
                             <h3>We pay you: $<?php echo number_format($total,2,'.','');?></h3>
                             <h3>If your book is an Instructor Edition (IE) then we have reduced the price by 30%.  If you enter the student ISBN for an instructor edition, we will reduce the price before sending payment.</h3>
                             
-                            <!--<input type="submit" id ="updateCart" value="Update Cart"> -->  
+                            <input type="submit" value="Update Cart" >  
                             <form action="" method="post">
                                 <input type="hidden" name="command" value="emptyCart">
                                 <input type="submit" value="Empty Cart" class="btn btn-primary btn-default" role="button">

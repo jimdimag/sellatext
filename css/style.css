@@ -46,3 +46,18 @@ div.desc
                 font-size: 25px;
                 margin-top: -40px;
 }
+
+.modal-body img {
+	/* Rotate div */
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    transform: rotate(90deg); /* Standard syntax */
+}
+
+.printable { display: none; }
+
+@media print
+{
+    .non-printable { display: none; }
+    .printable { display: block; }
+}

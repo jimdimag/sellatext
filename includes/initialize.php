@@ -25,6 +25,7 @@ require_once(LIB_PATH.DS."amazon.php");
 require_once(LIB_PATH.DS."getMatchingProduct.php");
 require_once(LIB_PATH.DS."amazonPricingMWS.php");
 require_once (LIB_PATH.DS."guides.php");
+require_once (LIB_PATH.DS."qty.php");
 
 //Load database related classes
 require_once(LIB_PATH.DS."user.php");

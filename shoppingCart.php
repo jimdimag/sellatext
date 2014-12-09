@@ -29,18 +29,25 @@ if(isset($_POST['paymentType'])){
 	if(!$weight){
 		$weight = 3;
 	} 
+	
+	$shipParams = array('fname'=>$fname,
+					'lname'=>$lname,
+					'weight'=>$weight,
+					);
 	if($_POST['paymentType'] == 'paypal'){
-        $results = Checkout::paypal_checkout($cart_id,$user_id,$_POST['paymentType'],trim($_POST['paypalEmail']));
-		if($results &&  $results->create() && ($track = Checkout::rocket($weight))) {
-			//Checkout::send_email($track, $email);
+		$paymentType = 1;
+        $results = Checkout::paypal_checkout($cart_id,$user_id,$paymentType,trim($_POST['paypalEmail']));
+		if($results &&  $results->create() && ($track = Checkout::rocket($shipParams))) {
+			Checkout::send_email($track, $email);
 			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by " .$shipBy )); 
 		}else {
 			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
 		}
 	} elseif ($_POST['paymentType']== 'check') {
+		$paymentType = 1;
 		$params = array('cart_id'=>$cart_id,
 						'user_id'=>$user_id,
-						'pay_type'=>$_POST['paymentType'],
+						'pay_type'=>$paymentType,
 						);
 						
 					$params2 = array('user_id'=>$user_id,
@@ -55,8 +62,8 @@ if(isset($_POST['paymentType'])){
 						);
 		$results = Checkout::check_checkout($params);
 		$results2 = User::update_user($params2);
-		if($results && $results->create() && ($track = Checkout::rocket($weight))&& $results2->update()) {
-			//Checkout::send_email($track, $email);
+		if($results && $results->create() && ($track = Checkout::rocket($shipParams))&& $results2->update()) {
+			Checkout::send_email($track, $email);
 			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy ));  
 		} else {
 			$message="There was an error processing your request.  Please verify that you filled in all the required information.";
@@ -77,7 +84,7 @@ if(isset($_POST['paymentType'])){
 					
 	
 	$results = Checkout::update_tracking($params);
-	if($results && $results->update()) {
+	if($results && $results->update_track()) {
 		$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy )); 
 	}
 }
