@@ -44,7 +44,7 @@ if(isset($_POST['paymentType'])){
 			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
 		}
 	} elseif ($_POST['paymentType']== 'check') {
-		$paymentType = 1;
+		$paymentType = 2;
 		$params = array('cart_id'=>$cart_id,
 						'user_id'=>$user_id,
 						'pay_type'=>$paymentType,

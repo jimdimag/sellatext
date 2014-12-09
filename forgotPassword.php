@@ -24,9 +24,9 @@ if(isset($_POST['email'])){
         if($results){                       
             $to = $_POST['email'];
             $subject = 'Your new SellAText.net password';
-            $message1 = 'Your new temporary password: '.$genPassword;
+            $message1 = 'Your new temporary password: '.$genPassword. ".\n Please log in with the new password and then in your account change your password.";
             if(mail($to, $subject, $message1)){
-                $message="Check your email. Password sent!";
+                $session->message=("Check your email. Password sent!");
                 redirect_to('login.php');
             } else {
                 $message="An error occurred, and your email was not sent.";

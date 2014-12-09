@@ -49,7 +49,7 @@ We will be deducting <b>25%</b> from the buy back price shown.</div>
 </div>
   
 <br>
-<div><h3><p>We do not return any damaged books that are sent to us, even if we are not paying for the book.</p></h3></div>
+<div><h3><p style="text-align:center;">We do not return any damaged books that are sent to us, even if we are not paying for the book.</p></h3></div>
 <?
 include 'footer.php';
 ?>
