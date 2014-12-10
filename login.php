@@ -23,10 +23,10 @@ if (isset($_POST['submit'])) { // Form has been submitted.
   	
     $session->login($found_user);
 		log_action('Login', "{$found_user->email } logged in.");
-		$_SESSION['user_id'] = $found_user->id; 
-		$_SESSION['first_name'] = $found_user->fname; 
-		$_SESSION['last_name'] = $found_user->lname;
-		$_SESSION['email'] = $found_user->email; 
+		$_SESSION['user_id'] = $found_user['id']; 
+		$_SESSION['first_name'] = $found_user['fname']; 
+		$_SESSION['last_name'] = $found_user['lname'];
+		$_SESSION['email'] = $found_user['email']; 
 		
     if(($_SESSION['buyback_cartId']) && ($_SESSION['user_id'])){
     	$results = Cart::update_userId($_SESSION['buyback_cartId'],$_SESSION['user_id']);
@@ -42,6 +42,7 @@ if (isset($_POST['submit'])) { // Form has been submitted.
   } else {
     // username/password combo was not found in the database
     $message="Username/password combination incorrect.";
+	echo $message;
   }
   
 } else { // Form has not been submitted.

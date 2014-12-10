@@ -32,6 +32,7 @@ if(isset($_POST['command'])){
         } else {
             $session->message("An error occurred and your cart was not emptied.");
         }
+		
     } else if($_POST['command'] == 'updateCart'){
         foreach($_POST['qty'] as $id => $quantity){ 
         	//if($quantity < $cart->qty){ 
@@ -75,6 +76,7 @@ require_once 'search.php';
                     <form action="" method="POST">
                         <input type="hidden" name="command" value="updateCart">
                         <h1 class="entry-title">Result</h1>
+                        
                         <table width="650" cellpadding="2" cellspacing="2" id="book-search" class="table">
 			    <tr style="color:#FFF;">
                 <th height="30" bgcolor="#666666">&nbsp;</th>
@@ -103,7 +105,7 @@ require_once 'search.php';
                                         ?>                                    
                                     </td>
 <td style="vertical-align:top"><?php echo '$' . number_format($cart[$i]->price, 2); ?></td>
-<td style="vertical-align:top; text-align:center"><input type="text" name="qty[<?php echo $cart[$i]->id; ?>]" value="<?php echo $cart[$i]->qty;?>" style="width: 35px;" ></td>
+<td style="vertical-align:top; text-align:center"><input type="text" name="qty[<?php echo $cart[$i]->id; ?>]" class="qty" value="<?php echo $cart[$i]->qty;?>" style="width: 35px;" ></td>
 
 <td style="vertical-align:top" class="total"><?php echo '$' .number_format(($cart[$i]->price * $cart[$i]->qty), 2); ?></td>
 <td style="vertical-align:top; text-align:center">
@@ -115,7 +117,8 @@ require_once 'search.php';
 <?php $total = $total+($cart[$i]->price * $cart[$i]->qty);?>
                             <?php endfor; ?>
                             
-                        </table>                       
+                        </table>          
+                        <input type="submit" id="updateCart" value="Update Cart" class="btn btn-primary btn-default" role="button">              
                     </form>
                     <div id="buycart" class="bottom-sale">
                             <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_expire." days"))); ?>.
@@ -127,10 +130,12 @@ require_once 'search.php';
                             <h3>We pay you: $<?php echo number_format($total,2,'.','');?></h3>
                             <h3>If your book is an Instructor Edition (IE) then we have reduced the price by 30%.  If you enter the student ISBN for an instructor edition, we will reduce the price before sending payment.</h3>
                             
-                            <input type="submit" value="Update Cart" >  
+                            
+                            
                             <form action="" method="post">
+                            	 
                                 <input type="hidden" name="command" value="emptyCart">
-                                <input type="submit" value="Empty Cart" class="btn btn-primary btn-default" role="button">
+                                <input type="submit" value="Empty Cart" class="btn btn-warning btn-default" role="button">
                                 <?php if ($total > $settings->min_amount): ?>
                                 <a href="shoppingCart.php" class="btn btn-success btn-default active" role="button">Proceed to Checkout</a>
                             <?php else: ?>

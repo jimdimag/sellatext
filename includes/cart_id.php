@@ -85,7 +85,7 @@ public function genchksum13($isbn) {
 		}
 		if(!empty($amazon['payPrice']) && !empty($isbn)) {
 			$cart = new Cart();
-			$cart->price 	= $amazon['payPrice'];
+			$cart->price 	= ($amazon['payPrice']>3) ? $amazon['payPrice'] : 0;
 			$cart->qty_limit= $qtyLimit;
 			$cart->qty		= 1;
 			$cart->cart_id 	= $cart_id;

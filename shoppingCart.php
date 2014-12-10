@@ -35,8 +35,8 @@ if(isset($_POST['paymentType'])){
 					'weight'=>$weight,
 					);
 	if($_POST['paymentType'] == 'paypal'){
-		$paymentType = 1;
-        $results = Checkout::paypal_checkout($cart_id,$user_id,$paymentType,trim($_POST['paypalEmail']));
+		$pay_type = 1;
+        $results = Checkout::paypal_checkout($cart_id,$user_id,$pay_type,trim($_POST['paypalEmail'])); 
 		if($results &&  $results->create() && ($track = Checkout::rocket($shipParams))) {
 			Checkout::send_email($track, $email);
 			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by " .$shipBy )); 
@@ -44,10 +44,10 @@ if(isset($_POST['paymentType'])){
 			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
 		}
 	} elseif ($_POST['paymentType']== 'check') {
-		$paymentType = 2;
+		$pay_type = 2;
 		$params = array('cart_id'=>$cart_id,
 						'user_id'=>$user_id,
-						'pay_type'=>$paymentType,
+						'pay_type'=>$pay_type,
 						);
 						
 					$params2 = array('user_id'=>$user_id,
@@ -77,7 +77,7 @@ if(isset($_POST['paymentType'])){
 	$params = array('id'=>$id,
 					'cart_id'=>$cart_id,
 					'user_id'=>$user_id,
-					'pay_type'=>$_POST['paymentType'],
+					'pay_type'=>$pay_type,
 					'tracking'=>$track,
 					'ship'=>$shipBy2,
 					);

@@ -11,7 +11,4 @@ $('#myModal1').on('show.bs.modal', function (event) {
   modal.find('.modal-body img ').attr("src","tracking/label"+img+".gif");
 });
 
-/*$("#print").on('click', function () {
-	window.print();
-});*/
-});
+

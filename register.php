@@ -14,7 +14,17 @@ if(isset($_POST['email'])){
         );
         $registrationResults = User::register_user($params);
         if($registrationResults){
-            $_SESSION['buyback_userId'] = $registrationResults['id'];
+            $found_user = User::authenticate($params['email'], $params['password']);
+	
+  if ($found_user) {
+  	
+    $session->login($found_user);
+		log_action('Login', "{$found_user->email } logged in.");
+		$_SESSION['user_id'] = $found_user['id']; 
+		$_SESSION['first_name'] = $found_user['fname']; 
+		$_SESSION['last_name'] = $found_user['lname'];
+		$_SESSION['email'] = $found_user['email']; 
+			
             $session->message("Registration successful!");
             if($_SESSION['buyback_cartId'] > 0){
                 redirect_to('cart.php');
@@ -30,7 +40,7 @@ if(isset($_POST['email'])){
       $session->message("Your passwords do not match. Please try again.");
     }
 }
-
+}
 
 ?>
 <div id="page" class="container"> 
