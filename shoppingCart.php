@@ -6,7 +6,8 @@ require_once('includes/initialize.php');
 require_once 'header.php';
 $total =0;
  $settings = Settings::get_site_settings();
- $shipBy = strftime(" %m/%d/%y",(strtotime("+".$settings->days_expire." days"))); 
+ $shipBy = strftime(" %m/%d/%y",(strtotime("+".$settings->days_ship." days")));
+  
 if (isset($_SESSION['buyback_cartId'])){
  $cart_id = $_SESSION['buyback_cartId']; 
 } elseif(isset($_SESSION['user_id'])){ 
@@ -38,8 +39,9 @@ if(isset($_POST['paymentType'])){
 		$pay_type = 1;
         $results = Checkout::paypal_checkout($cart_id,$user_id,$pay_type,trim($_POST['paypalEmail'])); 
 		if($results &&  $results->create() && ($track = Checkout::rocket($shipParams))) {
-			Checkout::send_email($track, $email);
+			Checkout::send_email($track, $email,$shipBy);
 			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by " .$shipBy )); 
+			
 		}else {
 			$message="There was an error processing your request.  Please verify that you selected PayPal and filled in your email address.";
 		}
@@ -63,7 +65,7 @@ if(isset($_POST['paymentType'])){
 		$results = Checkout::check_checkout($params);
 		$results2 = User::update_user($params2);
 		if($results && $results->create() && ($track = Checkout::rocket($shipParams))&& $results2->update()) {
-			Checkout::send_email($track, $email);
+			Checkout::send_email($track, $email, $shipBy);
 			$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy ));  
 		} else {
 			$message="There was an error processing your request.  Please verify that you filled in all the required information.";
@@ -71,7 +73,7 @@ if(isset($_POST['paymentType'])){
 	}
 	
 	$id = Checkout::get_checkout_id($cart_id, $user_id);
-	$ship = strtotime("+".$settings->days_expire." days");
+	$ship = strtotime("+".$settings->days_ship." days");
 	$shipBy2=date("Y-m-d", $ship);
 	
 	$params = array('id'=>$id,
@@ -85,8 +87,12 @@ if(isset($_POST['paymentType'])){
 	
 	$results = Checkout::update_tracking($params);
 	if($results && $results->update_track()) {
-		$message=(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy )); 
+		$session->message(strftime("Thank you.\n  An email will be sent with your shipping label and tracking number.  Please remember to ship your items by  " .$shipBy )); 
+		$cart_id = 0;
+		$_SESSION['buyback_cartId']=$cart_id; 
+		redirect_to('index.php');
 	}
+	
 }
 
 $cart = Cart::get_cart_contents($cart_id);
@@ -146,7 +152,7 @@ if($results && $results->update_user()) {
                             <?php endfor; ?>         
             </table>
             <div class="bottom-sale">
-                    <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_expire." days"))); ?>.</p>
+                    <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_ship." days"))); ?>.</p>
                     <?php
                         if($total < $settings->min_amount):
                             echo '<p><span class="warning">You must sell a minimum of $'. $settings->min_amount . 

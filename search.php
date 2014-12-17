@@ -1,14 +1,16 @@
 
 
-<form class="form-horizontal" role="form" method="post" action="cart.php">                        
-                 <h3>Enter the <a data-toggle="modal" data-target="#myModal">ISBN</a> number from the back of the text book 
-                 and press the RETURN (ENTER) key.</h3>
+<form class="form-inline" role="form" method="post" action="cart.php">                        
+                 <h3>Enter the <a data-toggle="modal" data-target="#myModal">ISBN</a> number from the back of the text book .</h3> 
+                
                 <div class="form-group">
-    <div class="col-sm-5">
+    <div class="col-sm-10">
     	<input type="hidden" name="command" value="addItemToCart">
       <input type="text"  id="isbn" name="isbn" class="form-control" placeholder="ISBN">
+      
     </div>
   </div>
+  <input type="submit" id="submit" value="Search" class="btn btn-primary btn-default" role="button">  
                 <p>Please be sure to refer to our <a href="condition.php"> conditioning guide</a> so you know what we will accept and what discounts may be taken due to the condition of the book.</p>
             </form>
            <!-- <p>Sorry....We are experiencing some difficulties.  Please try again later.  Thank you.</p>-->

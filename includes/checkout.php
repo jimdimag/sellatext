@@ -96,10 +96,11 @@ class Checkout extends DatabaseObject {
 		}
 	}// rocket
 	
-	public function send_email($track,$email){
+	public function send_email($track,$email,$shipBy){
 	$fileatt = "tracking/label".$track.".gif";
 	$from = "SellAText.net";
-	$messagehtml = "Thank You!\n Attached is your mailing label, please remember to ship your package in a timely manor.\n  Your tracking number is: ".$track.". ";
+	$messagehtml = "Thank You!\n Attached is your mailing label.\n  Your tracking number is: ".$track.".\n
+	Please remember to ship your items by ".$shipBy;
 	$to= $email;
 	$subject = "Shipping label from SellAText";
 

@@ -121,14 +121,14 @@ require_once 'search.php';
                         <input type="submit" id="updateCart" value="Update Cart" class="btn btn-primary btn-default" role="button">              
                     </form>
                     <div id="buycart" class="bottom-sale">
-                            <p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_expire." days"))); ?>.
+                            <h3><p><?php echo strftime("Must be shipped by  %m/%d/%y", (strtotime("+".$settings->days_ship." days"))); ?>.</h3>
                             <?php
                                 if ($total < $settings->min_amount) {
                                     echo '<br>Minimum $' . $settings->min_amount . ' sale required!';
                                 }
                             ?></p>
                             <h3>We pay you: $<?php echo number_format($total,2,'.','');?></h3>
-                            <h3>If your book is an Instructor Edition (IE) then we have reduced the price by 30%.  If you enter the student ISBN for an instructor edition, we will reduce the price before sending payment.</h3>
+                            <h3>Instructor&rsquo;s edition will be paid at 30% less than quoted price, and annotated editions 90% less.</h3>
                             
                             
                             

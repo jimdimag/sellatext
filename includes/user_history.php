@@ -25,7 +25,7 @@ class UserHistory extends DatabaseObject {
 	public function get_history($user_id) {
 	global $database;
 		if(!empty($user_id)) {
-			$sql = "SELECT c.cart_id,pay_type,tracking,submitted,ship_by,sum(price) as price,s.status ";
+			$sql = "SELECT c.cart_id,pay_type,tracking,submitted,ship_by,(sum(price*qty)) as price,s.status ";
 			$sql .="FROM sellatext_cart c ";
 			$sql .="LEFT JOIN sellatext_checkout on c.cart_id=sellatext_checkout.cart_id ";
 			$sql .="LEFT JOIN sellatext_status s on sellatext_checkout.status = s.id ";

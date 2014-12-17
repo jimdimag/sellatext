@@ -32,7 +32,6 @@ $buyback_userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;*/
 require_once ('search.php');
 ?>
 <p><b>SellAText.net</b> is the best place to sell your unwanted text books.  At <b>SellAText.net</b> we will even buy your <b>Instructor Edition (IE)</b> text books.</p>
-<p>Please be sure to refer to our conditioning guide so you know what we will accept and what discounts may be taken due to the condition of the book.</p>
 <p>Getting paid for your unwanted textbooks is as easy as 1..2..3..</p>
     <ol>
         <li>Enter in the ISBN number of the used text book you wish to sell us.</li>

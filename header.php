@@ -54,7 +54,7 @@
   <header class="row non-printable">
       <div class="logo col-lg-8 col-sm-7">
           
-      <a href="index.php"><img  border="0" src='images/textbooks3.png' class="img-responsive pull-left"width="450px" height="300px" title="SellAText.net"></a>   
+      <a href="index.php"><img  border="0" src='images/logoUnder.png' class="img-responsive pull-left"width="450px" height="300px" title="SellAText.net"></a>   
       <?php if(!isset($_SESSION['user_id'])) {?>
       <p><h1>Welcome to SellAText.net!!</h1></p>
     <?php } else {
