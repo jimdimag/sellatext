@@ -2,7 +2,7 @@
 
 //ini_set('display_errors',"1");
 
- //include_once("analyticstracking.php");
+ include_once("analyticstracking.php");
 ?>
 <!DOCTYPE html>
 <html>

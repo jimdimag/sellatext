@@ -170,5 +170,24 @@ class Checkout extends DatabaseObject {
 		}
 	}
 	
+public function send_notification($cart_id,$email) {
+	$cart = Cart::get_cart_contents($cart_id);
+	$max = count($cart);
+	$to = "lreyes@bookcellaronline.com";//
+	$subject = "New SellAText Order";
+	$body = "There was a new order on SellAText.net for " .$email. "!\nThe items in the order are as follows:\n";
+for ($i=0;$i<$max;$i++){
+	$body .="Title: ".$cart[$i]->title." with a quantity of ".$cart[$i]->qty." and a price of ".'$' . number_format($cart[$i]->price, 2)."\n";
+}
+
+$body = wordwrap($body,70); 
+if(mail($to, $subject, $body)) {
+	return TRUE;
+} else {
+	return FALSE;
+}
+	
+}
+	
 } //Class
 ?>
